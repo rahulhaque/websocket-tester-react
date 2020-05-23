@@ -1,0 +1,13 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-brand {
+  padding: 18px 20px;
+  display: inline-block;
+}
+
+.navbar-brand:hover {
+  text-decoration: none;
+}
