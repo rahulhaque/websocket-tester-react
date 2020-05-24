@@ -24,7 +24,7 @@ Built with React and 💕.
 
 ## Screenshots
 
-- To be added.
+<img title="screen_1" src="https://github.com/rahulhaque/websocket-tester-react/blob/master/screenshots/screen_1.png" width="100%">
 
 ## More Info
 

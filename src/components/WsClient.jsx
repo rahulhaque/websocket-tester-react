@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useCallback } from 'react'
 import dayjs from 'dayjs';
 import Prism from 'prismjs';
 
@@ -36,11 +36,10 @@ const WsClient = (props) => {
     Prism.highlightAll();
   }, [connectionLog]);
 
-  const updateLog = (log) => {
+  const updateLog = useCallback((log) => {
     connectionLog.unshift(log);
     setConnectionLog([...connectionLog]);
-    // console.log(connectionLog);
-  };
+  }, [connectionLog]);
 
   const onOpen = (event) => {
     updateLog({
@@ -54,6 +53,11 @@ const WsClient = (props) => {
   const onMessage = (message) => {
     let json = JSON.parse(message.data);
     console.log(json);
+    updateLog({
+      datetime: dayjs().format('YYYY-MM-DD hh:mm:ss A'),
+      payload: message.data,
+      dataflow: 'incoming'
+    });
   };
 
   const onError = (error) => {
@@ -119,7 +123,8 @@ const WsClient = (props) => {
         updateLog({
           datetime: dayjs().format('YYYY-MM-DD hh:mm:ss A'),
           message: `Payload send to "${wsUrl}"`,
-          payload: message
+          payload: message,
+          dataflow: 'outgoing'
         });
         break;
 
@@ -198,15 +203,17 @@ const WsClient = (props) => {
                   {
                     item?.payload ?
                       <div>
-                        <Icon icon="arrow-up2" style={{ color: 'rgba(0, 235, 0, 1)' }} />
+                        {
+                          item.dataflow === 'incoming' ?
+                            <Icon icon="arrow-down2" style={{ color: 'rgba(224, 142, 0, 1)' }} /> :
+                            <Icon icon="arrow-up2" style={{ color: 'rgba(0, 235, 0, 1)' }} />
+                        }
                         <pre>
                           <code className="language-json">
                             {item?.payload}
                           </code>
                         </pre>
-                      </div>
-                      :
-                      ""
+                      </div> : ""
                   }
                 </Timeline.Item>
               })
