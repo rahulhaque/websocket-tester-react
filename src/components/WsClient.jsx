@@ -22,24 +22,22 @@ let wsUrl = '';
 const WsClient = (props) => {
 
   const [state, setState] = useTracked();
-
-  const [connectionLog, setConnectionLog] = useState([{
-    datetime: dayjs().format('YYYY-MM-DD hh:mm:ss A'),
-    message: `App started`
-  }]);
+  //
   const [connected, setConnected] = useState({ connected: false, connecting: false });
 
   const host = useRef();
   const payload = useRef();
+  const logRef = useRef(state.connectionLog);
 
   useEffect(() => {
     Prism.highlightAll();
-  }, [connectionLog]);
+  }, [state.connectionLog]);
 
   const updateLog = useCallback((log) => {
-    connectionLog.unshift(log);
-    setConnectionLog([...connectionLog]);
-  }, [connectionLog]);
+    logRef.current.unshift(log);
+    // connectionLog.unshift(log);
+    setState(prev => ({ ...prev, connectionLog: [...logRef.current] }));
+  }, [state.connectionLog]);
 
   const onOpen = (event) => {
     updateLog({
@@ -51,10 +49,10 @@ const WsClient = (props) => {
   };
 
   const onMessage = (message) => {
-    let json = JSON.parse(message.data);
-    console.log(json);
+    console.log(message);
     updateLog({
       datetime: dayjs().format('YYYY-MM-DD hh:mm:ss A'),
+      message: `Message received from "${message.origin}"`,
       payload: message.data,
       dataflow: 'incoming'
     });
@@ -62,8 +60,7 @@ const WsClient = (props) => {
 
   const onError = (error) => {
     // Error handling
-    // console.log(error);
-    // console.log('Check if WebSocket server is running!');
+    console.log('websocket_error', error);
 
     updateLog({
       datetime: dayjs().format('YYYY-MM-DD hh:mm:ss A'),
@@ -75,6 +72,11 @@ const WsClient = (props) => {
   const onClose = (event) => {
     // Close handling
     // console.log(event);
+    updateLog({
+      datetime: dayjs().format('YYYY-MM-DD hh:mm:ss A'),
+      message: `Connection closed "${wsUrl}"`
+    });
+    setConnected({ ...connected, connected: false, connecting: false });
   };
 
   const connect = () => {
@@ -106,31 +108,26 @@ const WsClient = (props) => {
     if (websocket?.readyState === 1) {
       websocket.close();
     }
-
-    updateLog({
-      datetime: dayjs().format('YYYY-MM-DD hh:mm:ss A'),
-      message: `Connection closed "${wsUrl}"`
-    });
-    setConnected({ ...connected, connected: false, connecting: false });
   };
 
   const sendMessage = (message) => {
-    console.log(websocket?.readyState);
+    // console.log(websocket?.readyState);
     setState(prev => ({ ...prev, payload: message }));
     switch (websocket?.readyState) {
       case 1:
-        websocket.send(message);
-        updateLog({
-          datetime: dayjs().format('YYYY-MM-DD hh:mm:ss A'),
-          message: `Payload send to "${wsUrl}"`,
-          payload: message,
-          dataflow: 'outgoing'
-        });
-        break;
 
-      case 3:
-        disconnect();
-        Alert.error('Please, connect to websocket first.');
+        if (message) {
+          websocket.send(message);
+          updateLog({
+            datetime: dayjs().format('YYYY-MM-DD hh:mm:ss A'),
+            message: `Payload send to "${wsUrl}"`,
+            payload: message,
+            dataflow: 'outgoing'
+          });
+        }
+
+        Alert.error('Payload is empty.');
+
         break;
 
       default:
@@ -193,7 +190,7 @@ const WsClient = (props) => {
         <Col xs={24}>
           <Timeline>
             {
-              connectionLog.map((item, index) => {
+              state.connectionLog.map((item, index) => {
                 return <Timeline.Item
                   className="rs-timeline-item-last"
                   key={index}
