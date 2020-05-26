@@ -6,9 +6,10 @@ Built with React and 💕.
 
 ## Features
 
-- Connect to websocket.
-- Send custom payload and receive response.
-- Realtime connection activity log.
+- Connect to any websocket.
+- Send and receive custom payload and response.
+- Realtime persistent connection activity log.
+- Clear log storage.
 
 ## Usage
 

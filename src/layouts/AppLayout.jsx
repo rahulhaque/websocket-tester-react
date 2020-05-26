@@ -5,13 +5,14 @@ import {
   Row,
   Nav,
   Navbar,
-  Icon,
   Toggle
 } from 'rsuite';
 
 import WsClient from './../components/WsClient';
 
 import { useTracked } from './../Store';
+
+const app_name = process.env.REACT_APP_APP_NAME;
 
 const AppLayout = (props) => {
 
@@ -22,13 +23,13 @@ const AppLayout = (props) => {
       <Row>
         <Navbar>
           <Navbar.Header>
-            <span className="navbar-brand logo"><Icon icon="terminal-line" /> WebSocket Tester</span>
+            <span className="navbar-brand logo"><img src="/assets/android-chrome-192x192.png" alt="logo" height="25px" /> <b>{app_name}</b></span>
           </Navbar.Header>
           <Navbar.Body>
             <Nav pullRight>
               Auto Reconnect
               <Toggle
-                style={{ margin: '16px', width: '50px' }}
+                style={{ margin: '16px 20px', width: '50px' }}
                 checkedChildren="On"
                 unCheckedChildren="Off"
                 checked={state.autoConnect}

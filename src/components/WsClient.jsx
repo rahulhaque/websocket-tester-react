@@ -1,9 +1,8 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react'
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import dayjs from 'dayjs';
 import Prism from 'prismjs';
 
 import {
-  Col,
   Icon,
   Input,
   InputGroup,
@@ -22,8 +21,7 @@ let wsUrl = '';
 const WsClient = (props) => {
 
   const [state, setState] = useTracked();
-  //
-  const [connected, setConnected] = useState({ connected: false, connecting: false });
+  const [connection, setConnection] = useState({ connected: false, connecting: false });
 
   const host = useRef();
   const payload = useRef();
@@ -39,34 +37,44 @@ const WsClient = (props) => {
     setState(prev => ({ ...prev, connectionLog: [...logRef.current] }));
   }, [state.connectionLog]);
 
+  const clearLog = () => {
+    logRef.current = [{
+      datetime: dayjs().format('YYYY-MM-DD hh:mm:ss A'),
+      message: `App started`
+    }];
+    setState(prev => ({
+      ...prev, connectionLog: logRef.current
+    }));
+  };
+
   const onOpen = (event) => {
     updateLog({
       datetime: dayjs().format('YYYY-MM-DD hh:mm:ss A'),
-      message: `Connected to "${wsUrl}"`
+      message: `Connected to "${event.target.url}"`
     });
-    setConnected({ ...connected, connected: true, connecting: false });
+    setConnection({ ...connection, connected: true, connecting: false });
     payload.current.focus();
   };
 
-  const onMessage = (message) => {
-    console.log(message);
+  const onMessage = (event) => {
+    // console.log(event);
     updateLog({
       datetime: dayjs().format('YYYY-MM-DD hh:mm:ss A'),
-      message: `Message received from "${message.origin}"`,
-      payload: message.data,
+      message: `Message received from "${event.origin}"`,
+      payload: event.data,
       dataflow: 'incoming'
     });
   };
 
-  const onError = (error) => {
+  const onError = (event) => {
     // Error handling
-    console.log('websocket_error', error);
+    // console.error(event);
 
     updateLog({
       datetime: dayjs().format('YYYY-MM-DD hh:mm:ss A'),
-      message: `Could not connect to "${wsUrl}". You may be able to find more information using inspector.`
+      message: `Could not connect to "${event.target.url}". You may be able to find more information using inspector.`
     });
-    setConnected({ ...connected, connected: false, connecting: false });
+    setConnection({ ...connection, connected: false, connecting: false });
   };
 
   const onClose = (event) => {
@@ -74,9 +82,9 @@ const WsClient = (props) => {
     // console.log(event);
     updateLog({
       datetime: dayjs().format('YYYY-MM-DD hh:mm:ss A'),
-      message: `Connection closed "${wsUrl}"`
+      message: `Connection closed "${event.target.url}"`
     });
-    setConnected({ ...connected, connected: false, connecting: false });
+    setConnection({ ...connection, connected: false, connecting: false });
   };
 
   const connect = () => {
@@ -92,7 +100,7 @@ const WsClient = (props) => {
           datetime: dayjs().format('YYYY-MM-DD hh:mm:ss A'),
           message: `Connecting to "${wsUrl}"`
         });
-        setConnected({ ...connected, connecting: true });
+        setConnection({ ...connection, connecting: true });
 
         websocket = new WebSocket(wsUrl);
       }
@@ -124,6 +132,8 @@ const WsClient = (props) => {
             payload: message,
             dataflow: 'outgoing'
           });
+
+          break;
         }
 
         Alert.error('Payload is empty.');
@@ -137,12 +147,40 @@ const WsClient = (props) => {
 
   };
 
+  // Render functions
+  const renderConnectionLog = useCallback(() => {
+    return state.connectionLog.map((item, index) => {
+      return <Timeline.Item
+        className="rs-timeline-item-last"
+        key={index}
+      >
+        <p style={{ color: '#969696' }}>{item.datetime}</p>
+        <p>{item.message}</p>
+        {
+          item?.payload ?
+            <div>
+              {
+                item.dataflow === 'incoming' ?
+                  <Icon icon="arrow-down2" style={{ color: 'rgba(224, 142, 0, 1)' }} /> :
+                  <Icon icon="arrow-up2" style={{ color: 'rgba(0, 235, 0, 1)' }} />
+              }
+              <pre style={{padding: '.5em'}}>
+                <code className="language-json">
+                  {item?.payload}
+                </code>
+              </pre>
+            </div> : ""
+        }
+      </Timeline.Item>
+    })
+  });
+
   return (
     <PanelGroup>
       <Panel>
         <InputGroup>
           <InputGroup.Addon>
-            <Icon icon="circle" style={{ color: (connected.connected ? 'rgba(0, 235, 0, 1)' : 'rgba(235, 0, 0, 1)') }} />
+            <Icon icon="circle" style={{ color: (connection.connected ? 'rgba(0, 235, 0, 1)' : 'rgba(235, 0, 0, 1)') }} />
           </InputGroup.Addon>
           <InputGroup.Button
             style={{ width: '60px' }}
@@ -153,11 +191,11 @@ const WsClient = (props) => {
           </InputGroup.Button>
           <Input defaultValue={state.host} inputRef={host} />
           {
-            connected.connected ? (
+            connection.connected ? (
               <InputGroup.Button
                 color="red"
                 onClick={() => disconnect()}
-                loading={connected.connecting}
+                loading={connection.connecting}
               >
                 <Icon icon="unlink" /> Disconnect
               </InputGroup.Button>
@@ -165,7 +203,7 @@ const WsClient = (props) => {
                 <InputGroup.Button
                   color="blue"
                   onClick={() => connect()}
-                  loading={connected.connecting}
+                  loading={connection.connecting}
                 >
                   <Icon icon="link" /> Connect
                 </InputGroup.Button>
@@ -176,7 +214,7 @@ const WsClient = (props) => {
       <Panel>
         <Input
           className="language-json"
-          style={{ borderColor: connected.connected ? "rgba(0, 235, 0, 1)" : "" }}
+          style={{ borderColor: connection.connected ? "rgba(0, 235, 0, 1)" : "" }}
           inputRef={payload}
           defaultValue={state.payload}
           componentClass="textarea"
@@ -186,37 +224,17 @@ const WsClient = (props) => {
         <br />
         <Button appearance="primary" block onClick={() => sendMessage(payload.current.value)}><Icon icon="realtime" /> Send</Button>
       </Panel>
-      <Panel>
-        <Col xs={24}>
-          <Timeline>
-            {
-              state.connectionLog.map((item, index) => {
-                return <Timeline.Item
-                  className="rs-timeline-item-last"
-                  key={index}
-                >
-                  <p style={{ color: '#969696' }}>{item.datetime}</p>
-                  <p>{item.message}</p>
-                  {
-                    item?.payload ?
-                      <div>
-                        {
-                          item.dataflow === 'incoming' ?
-                            <Icon icon="arrow-down2" style={{ color: 'rgba(224, 142, 0, 1)' }} /> :
-                            <Icon icon="arrow-up2" style={{ color: 'rgba(0, 235, 0, 1)' }} />
-                        }
-                        <pre>
-                          <code className="language-json">
-                            {item?.payload}
-                          </code>
-                        </pre>
-                      </div> : ""
-                  }
-                </Timeline.Item>
-              })
-            }
-          </Timeline>
-        </Col>
+      <Panel header={
+        <div>
+          <Icon icon="building2" /> Connection Log
+          <Button color="red" onClick={() => clearLog()} style={{ float: 'right' }}><Icon icon="trash" /> Clear Log</Button>
+        </div>
+      }>
+        <Timeline>
+          {
+            renderConnectionLog()
+          }
+        </Timeline>
       </Panel>
     </PanelGroup>
   )
