@@ -21,7 +21,7 @@ Built with React and 💕.
 ## To-do
 
 - Add websocket protocol support.
-- Auto reconnect on disconnect.
+- Add multiple payload store.
 
 ## Screenshots
 

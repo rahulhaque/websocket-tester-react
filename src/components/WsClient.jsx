@@ -32,6 +32,10 @@ const WsClient = (props) => {
     Prism.highlightAll();
   }, [state.connectionLog]);
 
+  useEffect(() => {
+    stateRef.current.autoConnect = state.autoConnect;
+  }, [state.autoConnect])
+
   const updateLog = (log) => {
     // logRef.current.unshift(log);
     stateRef.current.connectionLog.unshift(log);
@@ -92,9 +96,7 @@ const WsClient = (props) => {
   };
 
   const reconnect = () => {
-    // console.log(state.autoConnect);
-
-    if (loadState()?.autoConnect) {
+    if (stateRef.current.autoConnect) {
       if (stateRef.current.retryCount >= 3) {
         Alert.warning(`Stopped trying to reconnect after ${stateRef.current.retryCount} attempts.`);
         stateRef.current.retryCount = 0;
