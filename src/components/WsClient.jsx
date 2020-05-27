@@ -13,7 +13,6 @@ import {
   Alert
 } from 'rsuite';
 
-import { loadState } from './../Helpers';
 import { useTracked } from './../Store';
 
 let websocket = null;
@@ -37,9 +36,7 @@ const WsClient = (props) => {
   }, [state.autoConnect])
 
   const updateLog = (log) => {
-    // logRef.current.unshift(log);
     stateRef.current.connectionLog.unshift(log);
-    // connectionLog.unshift(log);
     setState(prev => ({ ...prev, connectionLog: [...stateRef.current.connectionLog] }));
   };
 
@@ -76,7 +73,6 @@ const WsClient = (props) => {
   const onError = (event) => {
     // Error handling
     // console.error(event);
-
     updateLog({
       datetime: dayjs().format('YYYY-MM-DD hh:mm:ss A'),
       message: `Could not connect to "${event.target.url}". You may be able to find more information using inspector.`
@@ -145,7 +141,6 @@ const WsClient = (props) => {
     setState(prev => ({ ...prev, payload: message }));
     switch (websocket?.readyState) {
       case 1:
-
         if (message) {
           websocket.send(message);
           updateLog({
@@ -154,12 +149,10 @@ const WsClient = (props) => {
             payload: message,
             dataflow: 'outgoing'
           });
-
           break;
         }
 
         Alert.error('Payload is empty.');
-
         break;
 
       default:

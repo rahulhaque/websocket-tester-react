@@ -9,6 +9,7 @@ Built with React and 💕.
 - Connect to any websocket.
 - Send and receive custom payload and response.
 - Realtime persistent connection activity log.
+- Auto reconnect option.
 - Clear log storage.
 
 ## Usage
