@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import dayjs from 'dayjs';
 import Prism from 'prismjs';
 
@@ -13,10 +13,11 @@ import {
   Alert
 } from 'rsuite';
 
+import { loadState } from './../Helpers';
 import { useTracked } from './../Store';
 
 let websocket = null;
-let wsUrl = '';
+let wsHost = '';
 
 const WsClient = (props) => {
 
@@ -25,29 +26,31 @@ const WsClient = (props) => {
 
   const host = useRef();
   const payload = useRef();
-  const logRef = useRef(state.connectionLog);
+  const stateRef = useRef({ connectionLog: state.connectionLog, retryCount: 0, autoConnect: state.autoConnect });
 
   useEffect(() => {
     Prism.highlightAll();
   }, [state.connectionLog]);
 
-  const updateLog = useCallback((log) => {
-    logRef.current.unshift(log);
+  const updateLog = (log) => {
+    // logRef.current.unshift(log);
+    stateRef.current.connectionLog.unshift(log);
     // connectionLog.unshift(log);
-    setState(prev => ({ ...prev, connectionLog: [...logRef.current] }));
-  }, [state.connectionLog]);
+    setState(prev => ({ ...prev, connectionLog: [...stateRef.current.connectionLog] }));
+  };
 
   const clearLog = () => {
-    logRef.current = [{
+    stateRef.current.connectionLog = [{
       datetime: dayjs().format('YYYY-MM-DD hh:mm:ss A'),
       message: `App started`
     }];
     setState(prev => ({
-      ...prev, connectionLog: logRef.current
+      ...prev, connectionLog: stateRef.current.connectionLog
     }));
   };
 
   const onOpen = (event) => {
+    stateRef.current.retryCount = 0;
     updateLog({
       datetime: dayjs().format('YYYY-MM-DD hh:mm:ss A'),
       message: `Connected to "${event.target.url}"`
@@ -85,6 +88,23 @@ const WsClient = (props) => {
       message: `Connection closed "${event.target.url}"`
     });
     setConnection({ ...connection, connected: false, connecting: false });
+    reconnect();
+  };
+
+  const reconnect = () => {
+    // console.log(state.autoConnect);
+
+    if (loadState()?.autoConnect) {
+      if (stateRef.current.retryCount >= 3) {
+        Alert.warning(`Stopped trying to reconnect after ${stateRef.current.retryCount} attempts.`);
+        stateRef.current.retryCount = 0;
+      }
+      else {
+        stateRef.current.retryCount = stateRef.current.retryCount + 1;
+        connect();
+        Alert.info(`Tried to reconnect ${stateRef.current.retryCount} times.`);
+      }
+    }
   };
 
   const connect = () => {
@@ -92,17 +112,17 @@ const WsClient = (props) => {
       Alert.error('Websocket host is missing.');
     }
     else {
-      wsUrl = `${state.secure ? 'wss://' : 'ws://'}${host.current.value}`;
+      wsHost = `${state.secure ? 'wss://' : 'ws://'}${host.current.value}`;
 
       setState(prev => ({ ...prev, host: host.current.value }));
       if (websocket?.readyState !== 1) {
         updateLog({
           datetime: dayjs().format('YYYY-MM-DD hh:mm:ss A'),
-          message: `Connecting to "${wsUrl}"`
+          message: `Connecting to "${wsHost}/"`
         });
         setConnection({ ...connection, connecting: true });
 
-        websocket = new WebSocket(wsUrl);
+        websocket = new WebSocket(wsHost);
       }
 
       websocket.onopen = onOpen;
@@ -128,7 +148,7 @@ const WsClient = (props) => {
           websocket.send(message);
           updateLog({
             datetime: dayjs().format('YYYY-MM-DD hh:mm:ss A'),
-            message: `Payload send to "${wsUrl}"`,
+            message: `Payload send to "${wsHost}"`,
             payload: message,
             dataflow: 'outgoing'
           });
@@ -148,7 +168,7 @@ const WsClient = (props) => {
   };
 
   // Render functions
-  const renderConnectionLog = useCallback(() => {
+  const renderConnectionLog = () => {
     return state.connectionLog.map((item, index) => {
       return <Timeline.Item
         className="rs-timeline-item-last"
@@ -164,7 +184,7 @@ const WsClient = (props) => {
                   <Icon icon="arrow-down2" style={{ color: 'rgba(224, 142, 0, 1)' }} /> :
                   <Icon icon="arrow-up2" style={{ color: 'rgba(0, 235, 0, 1)' }} />
               }
-              <pre style={{padding: '.5em'}}>
+              <pre style={{ padding: '.5em' }}>
                 <code className="language-json">
                   {item?.payload}
                 </code>
@@ -173,7 +193,7 @@ const WsClient = (props) => {
         }
       </Timeline.Item>
     })
-  });
+  };
 
   return (
     <PanelGroup>
@@ -240,4 +260,4 @@ const WsClient = (props) => {
   )
 }
 
-export default React.memo(WsClient)
+export default React.memo(WsClient);
