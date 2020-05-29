@@ -8,9 +8,9 @@ const globalState = {
   // Declare your global variables here
   host: 'localhost:6001',
   payload: '',
-  activePayload: '1',
+  activePayload: '0',
   payloads: [
-    {id: '1', label: 'Payload 1', payload: ''}
+    {id: '0', label: 'Default', payload: ''}
   ],
   secure: true,
   autoConnect: false,

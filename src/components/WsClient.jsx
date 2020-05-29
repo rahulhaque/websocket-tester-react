@@ -242,19 +242,19 @@ const WsClient = (props) => {
               return <ResponsiveNav.Item key={payload.id} eventKey={payload.id}>
                 {payload.label}
                 {
-                  payload.id !== '1' ?
+                  payload.id !== '0' ?
                     <IconButton circle
                       color="red"
                       appearance="link"
                       size="xs"
                       onClick={(event) => {
-                        const nextItems = [...state.payloads];
-                        nextItems.splice(
-                          nextItems.map(item => item.id).indexOf(payload.id), 1
+                        const slicedPayloads = [...state.payloads];
+                        slicedPayloads.splice(
+                          slicedPayloads.map(payload => payload.id).indexOf(payload.id), 1
                         );
                         setState(prev => ({
                           ...prev,
-                          payloads: nextItems
+                          payloads: slicedPayloads
                         }))
                       }}
                       icon={<Icon icon="close" />}
