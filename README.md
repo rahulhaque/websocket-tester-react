@@ -1,28 +1,30 @@
 # WebSocket Tester 🔌 React
 
-Simple websocket tester client application that can connect to a websocket and send payloads and receive responses from the server along with tracking connection activity log.
+Simple websocket client application for testing and debugging websocket server. It can connect to a websocket server and send payloads and receive responses from the server along with tracking connection activity log.
 
 Built with React and 💕.
 
 ## Features
 
 - Connect to any websocket.
-- Send and receive custom payload and response.
+- Send and receive payloads and responses.
+- Payload is saved on successful send.
+- Multiple payloads storage support.
 - Realtime persistent connection activity log.
 - Auto reconnect option.
 - Clear log storage.
+- Fully responsive.
 
-## Usage
+## Install Instructions
 
 - Clone or download the repo.
-- `cd` into directory and run `npm i`
+- `cd` into directory and run `npm i` to install the dependencies.
 - Run `npm start` to launch the app.
 - Go to `http://localhost:3000`
 
 ## To-do
 
-- Add websocket protocol support.
-- Add multiple payload store.
+- Allow websocket protocol edit.
 
 ## Screenshots
 

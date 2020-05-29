@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import dayjs from 'dayjs';
-import Prism from 'prismjs';
 
 import {
   Icon,
@@ -9,9 +8,12 @@ import {
   Panel,
   PanelGroup,
   Button,
-  Timeline,
-  Alert
+  Alert,
+  IconButton
 } from 'rsuite';
+import ResponsiveNav from '@rsuite/responsive-nav';
+
+import LogItem from './LogItem';
 
 import { useTracked } from './../Store';
 
@@ -25,15 +27,23 @@ const WsClient = (props) => {
 
   const host = useRef();
   const payload = useRef();
-  const stateRef = useRef({ connectionLog: state.connectionLog, retryCount: 0, autoConnect: state.autoConnect });
-
-  useEffect(() => {
-    Prism.highlightAll();
-  }, [state.connectionLog]);
+  const stateRef = useRef({
+    connectionLog: state.connectionLog,
+    retryCount: 0,
+    autoConnect: state.autoConnect
+  });
 
   useEffect(() => {
     stateRef.current.autoConnect = state.autoConnect;
   }, [state.autoConnect])
+
+  useEffect(() => {
+    let currentPayload = state.payloads.find(payload => payload.id === state.activePayload);
+    if (!currentPayload) {
+      setState(prev => ({ ...prev, activePayload: '1' }));
+    }
+    payload.current.value = state.payloads.find(payload => payload.id === state.activePayload)?.payload;
+  }, [state.activePayload, state.payloads, setState])
 
   const updateLog = (log) => {
     stateRef.current.connectionLog.unshift(log);
@@ -138,7 +148,14 @@ const WsClient = (props) => {
 
   const sendMessage = (message) => {
     // console.log(websocket?.readyState);
-    setState(prev => ({ ...prev, payload: message }));
+    setState(prev => ({
+      ...prev, payloads: state.payloads.map(item => {
+        if (item.id === state.activePayload) {
+          return { ...item, payload: message };
+        }
+        return item;
+      })
+    }));
     switch (websocket?.readyState) {
       case 1:
         if (message) {
@@ -160,34 +177,6 @@ const WsClient = (props) => {
         break;
     }
 
-  };
-
-  // Render functions
-  const renderConnectionLog = () => {
-    return state.connectionLog.map((item, index) => {
-      return <Timeline.Item
-        className="rs-timeline-item-last"
-        key={index}
-      >
-        <p style={{ color: '#969696' }}>{item.datetime}</p>
-        <p>{item.message}</p>
-        {
-          item?.payload ?
-            <div>
-              {
-                item.dataflow === 'incoming' ?
-                  <Icon icon="arrow-down2" style={{ color: 'rgba(224, 142, 0, 1)' }} /> :
-                  <Icon icon="arrow-up2" style={{ color: 'rgba(0, 235, 0, 1)' }} />
-              }
-              <pre style={{ padding: '.5em' }}>
-                <code className="language-json">
-                  {item?.payload}
-                </code>
-              </pre>
-            </div> : ""
-        }
-      </Timeline.Item>
-    })
   };
 
   return (
@@ -227,11 +216,66 @@ const WsClient = (props) => {
         </InputGroup>
       </Panel>
       <Panel>
+        <ResponsiveNav appearance="tabs" activeKey={state.activePayload} onSelect={key => {
+
+          if (key === 'add_new') {
+            let max = Math.max(...state.payloads.map(item => item.id)) + 1;
+
+            setState(prev => ({
+              ...prev,
+              activePayload: `${max}`,
+              payloads: [...prev.payloads, {
+                id: `${max}`,
+                label: `Payload ${max}`,
+                payload: ``
+              }]
+            }));
+          }
+          else if (key) {
+            payload.current.value = state.payloads.find(payload => payload.id === key).payload
+            setState(prev => ({ ...prev, activePayload: key }));
+          }
+
+        }}>
+          {
+            state.payloads.map(payload => {
+              return <ResponsiveNav.Item key={payload.id} eventKey={payload.id}>
+                {payload.label}
+                {
+                  payload.id !== '1' ?
+                    <IconButton circle
+                      color="red"
+                      appearance="link"
+                      size="xs"
+                      onClick={(event) => {
+                        const nextItems = [...state.payloads];
+                        nextItems.splice(
+                          nextItems.map(item => item.id).indexOf(payload.id), 1
+                        );
+                        setState(prev => ({
+                          ...prev,
+                          payloads: nextItems
+                        }))
+                      }}
+                      icon={<Icon icon="close" />}
+                      style={{ height: '16px', width: '16px', top: '-5px', marginLeft: '4px' }}>
+                    </IconButton> : ''
+                }
+              </ResponsiveNav.Item>
+            })
+          }
+          <ResponsiveNav.Item
+            key="add_new"
+            eventKey="add_new"
+            icon={<Icon icon="plus" />}
+            style={{ background: '#292d33', borderRadius: '6px 6px 0 0' }}> Add New
+          </ResponsiveNav.Item>
+        </ResponsiveNav>
+        <br />
         <Input
           className="language-json"
           style={{ borderColor: connection.connected ? "rgba(0, 235, 0, 1)" : "" }}
           inputRef={payload}
-          defaultValue={state.payload}
           componentClass="textarea"
           rows={6}
           placeholder="Payload to send"
@@ -245,11 +289,7 @@ const WsClient = (props) => {
           <Button color="red" onClick={() => clearLog()} style={{ float: 'right' }}><Icon icon="trash" /> Clear Log</Button>
         </div>
       }>
-        <Timeline>
-          {
-            renderConnectionLog()
-          }
-        </Timeline>
+        <LogItem logs={state.connectionLog} />
       </Panel>
     </PanelGroup>
   )
