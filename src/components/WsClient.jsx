@@ -9,7 +9,11 @@ import {
   PanelGroup,
   Button,
   Alert,
-  IconButton
+  IconButton,
+  Popover,
+  Tooltip,
+  HelpBlock,
+  Whisper
 } from 'rsuite';
 import ResponsiveNav from '@rsuite/responsive-nav';
 
@@ -19,6 +23,7 @@ import { useTracked } from './../Store';
 
 let websocket = null;
 let wsHost = '';
+let payloadPopupTrigger = null;
 
 const WsClient = (props) => {
 
@@ -26,6 +31,7 @@ const WsClient = (props) => {
   const [connection, setConnection] = useState({ connected: false, connecting: false });
 
   const host = useRef();
+  const protocols = useRef();
   const payload = useRef();
   const stateRef = useRef({
     connectionLog: state.connectionLog,
@@ -35,15 +41,15 @@ const WsClient = (props) => {
 
   useEffect(() => {
     stateRef.current.autoConnect = state.autoConnect;
-  }, [state.autoConnect])
+  }, [state.autoConnect]);
 
   useEffect(() => {
     let currentPayload = state.payloads.find(payload => payload.id === state.activePayload);
     if (!currentPayload) {
-      setState(prev => ({ ...prev, activePayload: '1' }));
+      setState(prev => ({ ...prev, activePayload: '0' }));
     }
     payload.current.value = state.payloads.find(payload => payload.id === state.activePayload)?.payload;
-  }, [state.activePayload, state.payloads, setState])
+  }, [state.activePayload, state.payloads, setState]);
 
   const updateLog = (log) => {
     stateRef.current.connectionLog.unshift(log);
@@ -130,7 +136,12 @@ const WsClient = (props) => {
         });
         setConnection({ ...connection, connecting: true });
 
-        websocket = new WebSocket(wsHost);
+        if (state.protocols === '') {
+          websocket = new WebSocket(wsHost);
+        }
+        else {
+          websocket = new WebSocket(wsHost, state.protocols.replace(/\s+/g, '').split(','));
+        }
       }
 
       websocket.onopen = onOpen;
@@ -194,6 +205,39 @@ const WsClient = (props) => {
             {state.secure ? 'wss://' : 'ws://'}
           </InputGroup.Button>
           <Input defaultValue={state.host} inputRef={host} />
+          <Whisper
+            placement="bottom"
+            trigger="click"
+            triggerRef={ref => (payloadPopupTrigger = ref)}
+            speaker={
+              <Popover>
+                <h3 className="rs-popover-title">Websocket Protocol
+                <Whisper
+                    speaker={
+                      <Tooltip>Enter protocols comma separated</Tooltip>
+                    }
+                    trigger="hover"
+                    placement="bottomEnd"
+                  >
+                    <span className="rs-help-block rs-help-block-tooltip" style={{ marginTop: 0 }}>
+                      <i className="rs-icon rs-icon-question-circle2"></i>
+                    </span>
+                  </Whisper>
+                </h3>
+                <div className="rs-popover-content">
+                  <Input inputRef={protocols} placeholder="Enter protocols" defaultValue={state.protocols} onPressEnter={() => payloadPopupTrigger.hide()} />
+                </div>
+              </Popover>
+            }
+            onOpen={() => protocols.current.focus()}
+            onExit={() => {
+              setState(prev => ({ ...prev, protocols: protocols.current.value }))
+            }}
+          >
+            <InputGroup.Button color={state.protocols ? "violet" : ""}>
+              <Icon icon="sliders" />
+            </InputGroup.Button>
+          </Whisper>
           {
             connection.connected ? (
               <InputGroup.Button
@@ -274,11 +318,14 @@ const WsClient = (props) => {
         <br />
         <Input
           className="language-json"
-          style={{ borderColor: connection.connected ? "rgba(0, 235, 0, 1)" : "" }}
+          style={{
+            borderColor: connection.connected ? "rgba(0, 235, 0, 1)" : "",
+          }}
           inputRef={payload}
           componentClass="textarea"
           rows={6}
           placeholder="Payload to send"
+          onPressEnter={() => sendMessage(payload.current.value)}
         />
         <br />
         <Button appearance="primary" block onClick={() => sendMessage(payload.current.value)}><Icon icon="realtime" /> Send</Button>

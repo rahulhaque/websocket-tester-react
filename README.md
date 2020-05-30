@@ -2,7 +2,7 @@
 
 Simple websocket client application for testing and debugging websocket server. It can connect to a websocket server and send payloads and receive responses from the server along with tracking connection activity log.
 
-Built with React and 💕.
+Built with React and 💕
 
 ## Features
 
@@ -10,10 +10,11 @@ Built with React and 💕.
 - Send and receive payloads and responses.
 - Payload is saved on successful send.
 - Multiple payloads storage support.
+- Websocket protocol support.
 - Realtime persistent connection activity log.
 - Auto reconnect option.
-- Clear log storage.
-- Fully responsive.
+- Clear log view.
+- Responsive UI.
 
 ## Install Instructions
 
@@ -21,10 +22,6 @@ Built with React and 💕.
 - `cd` into directory and run `npm i` to install the dependencies.
 - Run `npm start` to launch the app.
 - Go to `http://localhost:3000`
-
-## To-do
-
-- Allow websocket protocol edit.
 
 ## Screenshots
 

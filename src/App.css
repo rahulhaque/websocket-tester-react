@@ -11,3 +11,7 @@ body {
 .navbar-brand:hover {
   text-decoration: none;
 }
+
+textarea.rs-input {
+  min-width: 200px;
+}

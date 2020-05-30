@@ -7,6 +7,7 @@ import { loadState, saveState } from './Helpers';
 const globalState = {
   // Declare your global variables here
   host: 'localhost:6001',
+  protocols: '',
   payload: '',
   activePayload: '0',
   payloads: [
