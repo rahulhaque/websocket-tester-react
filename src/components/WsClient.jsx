@@ -10,20 +10,18 @@ import {
   Button,
   Alert,
   IconButton,
-  Popover,
-  Tooltip,
-  HelpBlock,
-  Whisper
+  Row,
+  Col
 } from 'rsuite';
 import ResponsiveNav from '@rsuite/responsive-nav';
 
 import LogItem from './LogItem';
+import PayloadPopup from './PayloadPopup';
 
 import { useTracked } from './../Store';
 
 let websocket = null;
 let wsHost = '';
-let payloadPopupTrigger = null;
 
 const WsClient = (props) => {
 
@@ -31,7 +29,6 @@ const WsClient = (props) => {
   const [connection, setConnection] = useState({ connected: false, connecting: false });
 
   const host = useRef();
-  const protocols = useRef();
   const payload = useRef();
   const stateRef = useRef({
     connectionLog: state.connectionLog,
@@ -205,39 +202,7 @@ const WsClient = (props) => {
             {state.secure ? 'wss://' : 'ws://'}
           </InputGroup.Button>
           <Input defaultValue={state.host} inputRef={host} />
-          <Whisper
-            placement="bottom"
-            trigger="click"
-            triggerRef={ref => (payloadPopupTrigger = ref)}
-            speaker={
-              <Popover>
-                <h3 className="rs-popover-title">Websocket Protocol
-                <Whisper
-                    speaker={
-                      <Tooltip>Enter protocols comma separated</Tooltip>
-                    }
-                    trigger="hover"
-                    placement="bottomEnd"
-                  >
-                    <span className="rs-help-block rs-help-block-tooltip" style={{ marginTop: 0 }}>
-                      <i className="rs-icon rs-icon-question-circle2"></i>
-                    </span>
-                  </Whisper>
-                </h3>
-                <div className="rs-popover-content">
-                  <Input inputRef={protocols} placeholder="Enter protocols" defaultValue={state.protocols} onPressEnter={() => payloadPopupTrigger.hide()} />
-                </div>
-              </Popover>
-            }
-            onOpen={() => protocols.current.focus()}
-            onExit={() => {
-              setState(prev => ({ ...prev, protocols: protocols.current.value }))
-            }}
-          >
-            <InputGroup.Button color={state.protocols ? "violet" : ""}>
-              <Icon icon="sliders" />
-            </InputGroup.Button>
-          </Whisper>
+          <PayloadPopup />
           {
             connection.connected ? (
               <InputGroup.Button
@@ -317,7 +282,6 @@ const WsClient = (props) => {
         </ResponsiveNav>
         <br />
         <Input
-          className="language-json"
           style={{
             borderColor: connection.connected ? "rgba(0, 235, 0, 1)" : "",
           }}
@@ -327,8 +291,38 @@ const WsClient = (props) => {
           placeholder="Payload to send"
           onPressEnter={() => sendMessage(payload.current.value)}
         />
-        <br />
-        <Button appearance="primary" block onClick={() => sendMessage(payload.current.value)}><Icon icon="realtime" /> Send</Button>
+        <Row gutter="16" className="show-grid">
+          <Col xs="24" sm="24" md="8" lg="8">
+            <Button appearance="ghost" block color="orange" onClick={() => {
+              payload.current.value = '';
+              setState(prev => ({
+                ...prev,
+                payloads: state.payloads.map(item => {
+                  if (item.id === state.activePayload) {
+                    return { ...item, payload: '' };
+                  }
+                  return item;
+                })
+              }));
+            }}><Icon icon="eraser" /> Clear Payload</Button>
+          </Col>
+          <Col xs="24" sm="24" md="8" lg="8">
+            <Button appearance="ghost" block onClick={() => {
+              setState(prev => ({
+                ...prev,
+                payloads: state.payloads.map(item => {
+                  if (item.id === state.activePayload) {
+                    return { ...item, payload: payload.current.value };
+                  }
+                  return item;
+                })
+              }));
+            }}><Icon icon="save" /> Save Payload</Button>
+          </Col>
+          <Col xs="24" sm="24" md="8" lg="8">
+            <Button appearance="primary" block onClick={() => sendMessage(payload.current.value)}><Icon icon="realtime" /> Send Payload</Button>
+          </Col>
+        </Row>
       </Panel>
       <Panel header={
         <div>

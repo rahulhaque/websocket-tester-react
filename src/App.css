@@ -12,6 +12,12 @@ body {
   text-decoration: none;
 }
 
+/* For iPhone 5/SE */
 textarea.rs-input {
   min-width: 200px;
+}
+
+.show-grid [class*=rs-col-] {
+    padding-top: 10px;
+    margin-top: 10px;
 }
