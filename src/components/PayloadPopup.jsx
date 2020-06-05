@@ -41,7 +41,7 @@ const PayloadPopup = (props) => {
       onExit={() => {
         setState(prev => ({ ...prev, protocols: protocols.current.value }))
       }}
-    ><InputGroup.Button color={state.protocols ? "violet" : ""}>
+    ><InputGroup.Button color={state.protocols ? "violet" : null}>
         <Icon icon="sliders" />
       </InputGroup.Button>
     </Whisper>

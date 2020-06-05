@@ -1,6 +1,7 @@
 {
   "name": "websocket-tester-react",
   "version": "0.1.0",
+  "homepage": "./",
   "private": true,
   "dependencies": {
     "@rsuite/responsive-nav": "0.0.10",

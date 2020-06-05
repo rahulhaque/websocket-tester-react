@@ -23,7 +23,7 @@ const AppLayout = (props) => {
       <Row>
         <Navbar>
           <Navbar.Header>
-            <span className="navbar-brand logo"><img src="/assets/android-chrome-192x192.png" alt="logo" height="25px" /> <b>{app_name}</b></span>
+            <span className="navbar-brand logo"><img src="./assets/android-chrome-192x192.png" alt="logo" height="25px" /> <b>{app_name}</b></span>
           </Navbar.Header>
           <Navbar.Body>
             <Nav pullRight>

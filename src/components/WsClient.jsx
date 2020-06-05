@@ -291,8 +291,8 @@ const WsClient = (props) => {
           placeholder="Payload to send"
           onPressEnter={() => sendMessage(payload.current.value)}
         />
-        <Row gutter="16" className="show-grid">
-          <Col xs="24" sm="24" md="8" lg="8">
+        <Row gutter={16} className="show-grid">
+          <Col xs={24} sm={24} md={8} lg={8}>
             <Button appearance="ghost" block color="orange" onClick={() => {
               payload.current.value = '';
               setState(prev => ({
@@ -306,7 +306,7 @@ const WsClient = (props) => {
               }));
             }}><Icon icon="eraser" /> Clear Payload</Button>
           </Col>
-          <Col xs="24" sm="24" md="8" lg="8">
+          <Col xs={24} sm={24} md={8} lg={8}>
             <Button appearance="ghost" block onClick={() => {
               setState(prev => ({
                 ...prev,
@@ -319,7 +319,7 @@ const WsClient = (props) => {
               }));
             }}><Icon icon="save" /> Save Payload</Button>
           </Col>
-          <Col xs="24" sm="24" md="8" lg="8">
+          <Col xs={24} sm={24} md={8} lg={8}>
             <Button appearance="primary" block onClick={() => sendMessage(payload.current.value)}><Icon icon="realtime" /> Send Payload</Button>
           </Col>
         </Row>
