@@ -8,7 +8,7 @@ body {
   display: inline-block;
 }
 
-.navbar-brand:hover {
+.navbar-brand:hover, .navbar-brand:focus {
   text-decoration: none;
 }
 

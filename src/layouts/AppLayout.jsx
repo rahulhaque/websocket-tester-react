@@ -5,7 +5,7 @@ import {
   Row,
   Nav,
   Navbar,
-  Toggle
+  Toggle,
 } from 'rsuite';
 
 import WsClient from './../components/WsClient';
@@ -23,10 +23,17 @@ const AppLayout = (props) => {
       <Row>
         <Navbar>
           <Navbar.Header>
-            <span className="navbar-brand logo"><img src="./assets/android-chrome-192x192.png" alt="logo" height="25px" /> <b>{app_name}</b></span>
+            <a target="_blank"
+              className="navbar-brand logo"
+              rel="noopener noreferrer"
+              href="https://github.com/rahulhaque/websocket-tester-react"
+            >
+              <img src="./assets/android-chrome-192x192.png" alt="logo" height="25px" /> <b>{app_name}</b>
+            </a>
           </Navbar.Header>
           <Navbar.Body>
             <Nav pullRight>
+
               Auto Reconnect
               <Toggle
                 style={{ margin: '16px 20px', width: '50px' }}
