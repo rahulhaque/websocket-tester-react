@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 import {
   Grid,
@@ -33,7 +33,6 @@ const AppLayout = (props) => {
           </Navbar.Header>
           <Navbar.Body>
             <Nav pullRight>
-
               Auto Reconnect
               <Toggle
                 style={{ margin: '16px 20px', width: '50px' }}
