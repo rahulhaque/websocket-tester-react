@@ -15,6 +15,11 @@
 - Responsive UI.
 - Progressive Web App (Works both online and offline).
 
+## Shortcuts
+
+- Payload send on `enter` press.
+- Protocol set on `enter` press.
+
 ## Usage
 
 - Clone or download the repo.
