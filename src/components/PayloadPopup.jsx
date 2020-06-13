@@ -23,7 +23,7 @@ const PayloadPopup = (props) => {
             Websocket Protocol
             <Whisper
               speaker={
-                <Tooltip>Enter protocols comma separated</Tooltip>
+                <Tooltip>Enter protocols separated by comma.</Tooltip>
               }
               trigger="hover"
               placement="bottomEnd"

@@ -1,6 +1,6 @@
 {
-  "short_name": "Websocket Tester",
-  "name": "Websocket Tester",
+  "short_name": "Socktest",
+  "name": "Socktest",
   "icons": [
     {
       "src": "favicon.ico",
@@ -20,6 +20,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#e69e2c",
+  "background_color": "#0f131a"
 }

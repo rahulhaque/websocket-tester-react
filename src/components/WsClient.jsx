@@ -8,7 +8,7 @@ import {
   Panel,
   PanelGroup,
   Button,
-  Alert,
+  Notification,
   IconButton,
   Row,
   Col
@@ -107,20 +107,20 @@ const WsClient = (props) => {
   const reconnect = () => {
     if (stateRef.current.autoConnect) {
       if (stateRef.current.retryCount >= 3) {
-        Alert.warning(`Stopped trying to reconnect after ${stateRef.current.retryCount} attempts.`);
+        Notification.warning({ title: 'Warning', description: `Stopped trying to reconnect after ${stateRef.current.retryCount} attempts.` });
         stateRef.current.retryCount = 0;
       }
       else {
         stateRef.current.retryCount = stateRef.current.retryCount + 1;
         connect();
-        Alert.info(`Tried to reconnect ${stateRef.current.retryCount} times.`);
+        Notification.info({ title: 'Info', description: `Tried to reconnect ${stateRef.current.retryCount} times.` });
       }
     }
   };
 
   const connect = () => {
     if (host.current.value === '') {
-      Alert.error('Websocket host is missing.');
+      Notification.error({ title: 'Error', description: 'Websocket host is not defined.' });
     }
     else {
       wsHost = `${state.secure ? 'wss://' : 'ws://'}${host.current.value}`;
@@ -177,11 +177,11 @@ const WsClient = (props) => {
           break;
         }
 
-        Alert.error('Payload is empty.');
+        Notification.error({ title: 'Error', description: 'Payload is empty.' });
         break;
 
       default:
-        Alert.error('Please, connect to websocket first.');
+        Notification.error({ title: 'Error', description: 'Websocket disconnected.' });
         break;
     }
 

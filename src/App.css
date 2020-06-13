@@ -17,6 +17,17 @@ textarea.rs-input {
   min-width: 200px;
 }
 
+.rs-notification {
+  top: 12px !important;
+  right: 12px;
+  bottom: 12px;
+  max-width: 294px;
+}
+
+.rs-notification-item-content {
+  padding: 15px;
+}
+
 .show-grid [class*=rs-col-] {
     padding-top: 10px;
     margin-top: 10px;

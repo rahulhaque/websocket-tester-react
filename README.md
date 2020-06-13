@@ -1,8 +1,6 @@
-# WebSocket Tester 🔌 React
+# Socktest 🔌 WebSocket Tester React
 
-Simple websocket client application for testing and debugging websocket server. It can connect to a websocket server and send payloads and receive responses from the server along with tracking connection activity log.
-
-Built with React and 💕
+**Socktest** is a simple websocket client application built with React for testing and debugging websocket server. It can connect to a websocket server and send payloads and receive responses from the server along with tracking connection activity log.
 
 ## Features
 
@@ -15,8 +13,9 @@ Built with React and 💕
 - Auto reconnect option.
 - Clear log view.
 - Responsive UI.
+- Progressive Web App (Works both online and offline).
 
-## Install Instructions
+## Usage
 
 - Clone or download the repo.
 - `cd` into directory and run `npm i` to install the dependencies.
@@ -29,6 +28,10 @@ Built with React and 💕
 
 ## More Info
 
-This is a basic approach towards making a websocket tester app which can be used to test the logic of any websocket. Often we need to implement a websocket server for ourselves. However, testing process of the inner logic of the websocket quickly becomes tiresome. This app aims to lessen that effort.
+This is a basic approach towards making a websocket tester app which can be used to test the logic of any websocket server. Often we need to implement a websocket server for ourselves. However, testing process of the inner logic of the websocket quickly becomes tiresome. This app aims to lessen that effort.
 
 Spare a ⭐ to keep me motivated. 😃
+
+## License
+
+This software is licensed under the MIT License (MIT). You are free to use and modify the code. A simple mention or reference would be highly appreciated.
