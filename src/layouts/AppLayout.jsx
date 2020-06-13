@@ -28,7 +28,7 @@ const AppLayout = (props) => {
               rel="noopener noreferrer"
               href="https://github.com/rahulhaque/websocket-tester-react"
             >
-              <img src="./assets/android-chrome-192x192.png" alt="logo" height="25px" /> <b>{app_name}</b>
+              <img src={require('./../logo.png')} alt="logo" height="25px" /> <b>{app_name}</b>
             </a>
           </Navbar.Header>
           <Navbar.Body>
