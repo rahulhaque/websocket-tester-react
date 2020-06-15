@@ -289,7 +289,6 @@ const WsClient = (props) => {
           componentClass="textarea"
           rows={6}
           placeholder="Payload to send"
-          onPressEnter={() => sendMessage(payload.current.value)}
         />
         <Row gutter={16} className="show-grid">
           <Col xs={24} sm={24} md={8} lg={8}>

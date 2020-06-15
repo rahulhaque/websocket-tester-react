@@ -13,11 +13,11 @@
 - Auto reconnect option.
 - Clear log view.
 - Responsive UI.
+- JSON highlighter.
 - Progressive Web App (Works both online and offline).
 
 ## Shortcuts
 
-- Payload send on `enter` press.
 - Protocol set on `enter` press.
 
 ## Usage
