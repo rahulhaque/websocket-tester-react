@@ -2,6 +2,8 @@
 
 **Socktest** is a simple websocket client application built with React for testing and debugging websocket server. It can connect to a websocket server and send payloads and receive responses from the server along with tracking connection activity log.
 
+Demo - [Socktest](https://rahulhaque.github.io/websocket-tester-react/build)
+
 ## Features
 
 - Connect to any websocket.
