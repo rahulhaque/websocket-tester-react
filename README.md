@@ -29,6 +29,12 @@ Demo - [Socktest](https://rahulhaque.github.io/websocket-tester-react/build)
 - Run `npm start` to launch the app.
 - Go to `http://localhost:3000`
 
+## Docker
+
+- Run `docker-compose up -d` to start.
+- Go to `http://localhost:3000`
+- Run `docker-compose down` to stop.
+
 ## Screenshots
 
 <img title="screen_1" src="https://github.com/rahulhaque/websocket-tester-react/blob/master/screenshots/screen_1.png" width="100%">

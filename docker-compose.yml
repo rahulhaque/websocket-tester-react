@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  socktest:
+    build: .
+    image: socktest
+    volumes:
+      - ./build:/socktest
+    ports:
+      - "3000:3000"
