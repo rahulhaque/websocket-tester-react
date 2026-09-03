@@ -45,5 +45,178 @@
     "less": "^3.11.3",
     "less-loader": "^6.1.1",
     "react-app-rewired": "^2.1.6"
+  },
+  "overrides": {
+    "@babel/eslint-parser": {
+      "brace-expansion": "5.0.9"
+    },
+    "@eslint-community/eslint-utils": {
+      "brace-expansion": "5.0.9"
+    },
+    "@eslint/eslintrc": {
+      "brace-expansion": "5.0.9"
+    },
+    "@humanwhocodes/config-array": {
+      "brace-expansion": "5.0.9"
+    },
+    "@jest/core": {
+      "brace-expansion": "5.0.9"
+    },
+    "@jest/reporters": {
+      "brace-expansion": "5.0.9"
+    },
+    "@jest/test-sequencer": {
+      "brace-expansion": "5.0.9"
+    },
+    "@jest/transform": {
+      "brace-expansion": "5.0.9"
+    },
+    "@pmmmwh/react-refresh-webpack-plugin": {
+      "brace-expansion": "5.0.9"
+    },
+    "@surma/rollup-plugin-off-main-thread": {
+      "brace-expansion": "5.0.9"
+    },
+    "@typescript-eslint/eslint-plugin": {
+      "brace-expansion": "5.0.9"
+    },
+    "@typescript-eslint/experimental-utils": {
+      "brace-expansion": "5.0.9"
+    },
+    "@typescript-eslint/parser": {
+      "brace-expansion": "5.0.9"
+    },
+    "@typescript-eslint/type-utils": {
+      "brace-expansion": "5.0.9"
+    },
+    "@typescript-eslint/utils": {
+      "brace-expansion": "5.0.9"
+    },
+    "babel-jest": {
+      "brace-expansion": "5.0.9"
+    },
+    "babel-plugin-istanbul": {
+      "brace-expansion": "5.0.9"
+    },
+    "brace-expansion": {
+      "brace-expansion": "5.0.9"
+    },
+    "ejs": {
+      "brace-expansion": "5.0.9"
+    },
+    "eslint": {
+      "brace-expansion": "5.0.9"
+    },
+    "eslint-config-react-app": {
+      "brace-expansion": "5.0.9"
+    },
+    "eslint-plugin-flowtype": {
+      "brace-expansion": "5.0.9"
+    },
+    "eslint-plugin-import": {
+      "brace-expansion": "5.0.9"
+    },
+    "eslint-plugin-jest": {
+      "brace-expansion": "5.0.9"
+    },
+    "eslint-plugin-jsx-a11y": {
+      "brace-expansion": "5.0.9"
+    },
+    "eslint-plugin-react": {
+      "brace-expansion": "5.0.9"
+    },
+    "eslint-plugin-react-hooks": {
+      "brace-expansion": "5.0.9"
+    },
+    "eslint-plugin-testing-library": {
+      "brace-expansion": "5.0.9"
+    },
+    "eslint-webpack-plugin": {
+      "brace-expansion": "5.0.9"
+    },
+    "file-entry-cache": {
+      "brace-expansion": "5.0.9"
+    },
+    "filelist": {
+      "brace-expansion": "5.0.9"
+    },
+    "flat-cache": {
+      "brace-expansion": "5.0.9"
+    },
+    "fork-ts-checker-webpack-plugin": {
+      "brace-expansion": "5.0.9"
+    },
+    "glob": {
+      "brace-expansion": "5.0.9"
+    },
+    "jake": {
+      "brace-expansion": "5.0.9"
+    },
+    "jest": {
+      "brace-expansion": "5.0.9"
+    },
+    "jest-circus": {
+      "brace-expansion": "5.0.9"
+    },
+    "jest-cli": {
+      "brace-expansion": "5.0.9"
+    },
+    "jest-config": {
+      "brace-expansion": "5.0.9"
+    },
+    "jest-jasmine2": {
+      "brace-expansion": "5.0.9"
+    },
+    "jest-resolve-dependencies": {
+      "brace-expansion": "5.0.9"
+    },
+    "jest-runner": {
+      "brace-expansion": "5.0.9"
+    },
+    "jest-runtime": {
+      "brace-expansion": "5.0.9"
+    },
+    "jest-snapshot": {
+      "brace-expansion": "5.0.9"
+    },
+    "jest-watch-typeahead": {
+      "brace-expansion": "5.0.9"
+    },
+    "minimatch": {
+      "brace-expansion": "5.0.9"
+    },
+    "react-app-rewired": {
+      "brace-expansion": "5.0.9"
+    },
+    "react-dev-utils": {
+      "brace-expansion": "5.0.9"
+    },
+    "react-scripts": {
+      "brace-expansion": "5.0.9"
+    },
+    "recursive-readdir": {
+      "brace-expansion": "5.0.9"
+    },
+    "rimraf": {
+      "brace-expansion": "5.0.9"
+    },
+    "sucrase": {
+      "brace-expansion": "5.0.9"
+    },
+    "tailwindcss": {
+      "brace-expansion": "5.0.9"
+    },
+    "test-exclude": {
+      "brace-expansion": "5.0.9"
+    },
+    "webpack-dev-server": {
+      "brace-expansion": "5.0.9"
+    },
+    "workbox-build": {
+      "brace-expansion": "5.0.9"
+    },
+    "workbox-webpack-plugin": {
+      "brace-expansion": "5.0.9"
+    }
   }
 }
